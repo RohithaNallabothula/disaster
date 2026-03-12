@@ -1,0 +1,28 @@
+@import "tailwindcss";
+
+@theme {
+  --color-sentinel-900: #0a0a0b;
+  --color-sentinel-800: #161618;
+  --color-sentinel-700: #232326;
+  --color-sentinel-danger: #ef4444;
+  --color-sentinel-warning: #f59e0b;
+  --color-sentinel-success: #10b981;
+  --color-sentinel-info: #3b82f6;
+}
+
+@layer base {
+  body {
+    @apply bg-sentinel-900 text-gray-100 overflow-hidden;
+  }
+}
+
+/* Leaflet Map Overrides */
+.leaflet-container {
+  width: 100%;
+  height: 100%;
+  background: #0a0a0b !important;
+}
+
+.leaflet-tile-pane {
+  filter: grayscale(100%) invert(100%) contrast(90%);
+}
