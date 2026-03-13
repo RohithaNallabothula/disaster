@@ -1,28 +1,75 @@
 @import "tailwindcss";
 
 @theme {
-  --color-sentinel-900: #0a0a0b;
-  --color-sentinel-800: #161618;
-  --color-sentinel-700: #232326;
-  --color-sentinel-danger: #ef4444;
-  --color-sentinel-warning: #f59e0b;
-  --color-sentinel-success: #10b981;
-  --color-sentinel-info: #3b82f6;
+  /* V2 Colour Palette */
+  --color-primary: #06B6D4;
+  --color-secondary: #F59E0B;
+  --color-danger: #EF4444;
+  --color-success: #10B981;
+  --color-bg-dark: #0A0F1E;
+  --color-surface-dark: #111827;
+  --color-border-dark: #1E293B;
+  --color-muted-dark: #64748B;
+  --color-text-dark: #F1F5F9;
+
+  /* Legacy aliases (keep existing components working) */
+  --color-sentinel-900: #0A0F1E;
+  --color-sentinel-800: #111827;
+  --color-sentinel-700: #1E293B;
+  --color-sentinel-danger: #EF4444;
+  --color-sentinel-warning: #F59E0B;
+  --color-sentinel-success: #10B981;
+  --color-sentinel-info: #06B6D4;
+
+  --font-heading: 'Rajdhani', sans-serif;
+  --font-body: 'Source Sans 3', sans-serif;
 }
 
 @layer base {
   body {
-    @apply bg-sentinel-900 text-gray-100 overflow-hidden;
+    font-family: 'Source Sans 3', sans-serif;
+    background-color: #0A0F1E;
+    color: #F1F5F9;
+    overflow: hidden;
+  }
+  h1, h2, h3, h4, .font-heading {
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 600;
   }
 }
 
-/* Leaflet Map Overrides */
+/* Custom Scrollbar */
+.custom-scrollbar::-webkit-scrollbar { width: 4px; }
+.custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+.custom-scrollbar::-webkit-scrollbar-thumb { background: #1E293B; border-radius: 10px; }
+
+/* Map Overlay */
+.map-overlay {
+  background: radial-gradient(circle, rgba(6,182,212,0.03) 0%, rgba(10,15,30,0.8) 100%);
+}
+.thermal-hot {
+  background: radial-gradient(circle, rgba(239,68,68,0.3) 0%, transparent 70%);
+}
+
+/* Sidebar collapse */
+#sentinel-sidebar { transition: width 0.3s cubic-bezier(0.4,0,0.2,1); }
+#sentinel-sidebar.sidebar-collapsed { width: 64px !important; }
+#sentinel-sidebar.sidebar-collapsed .sidebar-content { display: none; }
+#sentinel-sidebar.sidebar-collapsed .sidebar-icon-only { display: flex; }
+
+/* Material Symbols */
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+/* Leaflet Map Overrides — dark tile style */
 .leaflet-container {
   width: 100%;
   height: 100%;
-  background: #0a0a0b !important;
+  background: #0A0F1E !important;
 }
-
 .leaflet-tile-pane {
-  filter: grayscale(100%) invert(100%) contrast(90%);
+  filter: grayscale(100%) invert(85%) contrast(90%) brightness(0.55) hue-rotate(180deg);
 }
+.leaflet-control-attribution { display: none; }
+.leaflet-control-zoom { display: none; }

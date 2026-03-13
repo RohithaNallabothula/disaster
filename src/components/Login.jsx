@@ -7,40 +7,57 @@ const Login = ({ onLogin }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
+  // Offline demo credentials map
+  const DEMO_USERS = {
+    commander:  { name: 'Commander Alpha', role: 'INCIDENT COMMANDER' },
+    responder:  { name: 'Responder Node',  role: 'FIELD RESPONDER'    },
+    admin:      { name: 'System Admin',    role: 'ADMINISTRATOR'       },
+  };
+  const DEMO_PASSWORDS = {
+    commander: 'password123',
+    responder: 'securePass!',
+    admin:     'admin',
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
     setError('');
 
+    // Try backend first; fall back to offline demo credentials
     try {
       const response = await fetch('http://localhost:5000/api/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password }),
+        signal: AbortSignal.timeout(2000),
       });
-
       const data = await response.json();
-
-      if (response.ok) {
-        onLogin(data);
-      } else {
-        setError(data.message || 'Authentication failed');
+      if (response.ok) { onLogin(data); return; }
+      setError(data.message || 'Authentication failed');
+    } catch {
+      // Backend unavailable — check offline demo credentials
+      const key = username.toLowerCase();
+      if (DEMO_USERS[key] && DEMO_PASSWORDS[key] === password) {
+        onLogin({
+          token: `demo-token-${key}-${Date.now()}`,
+          user: DEMO_USERS[key],
+        });
+        return;
       }
-    } catch (err) {
-      setError('Connection refused. Is the server running?');
+      setError('Access denied. Use demo credentials or start the server.');
     } finally {
       setIsLoading(false);
     }
   };
 
   const handleDemoLogin = (role) => {
-    if (role === 'Commander') {
-      setUsername('commander');
-      setPassword('password123');
-    } else {
-      setUsername('responder');
-      setPassword('securePass!');
-    }
+    // Directly log in without form submission
+    const key = role === 'Commander' ? 'commander' : 'responder';
+    onLogin({
+      token: `demo-token-${key}-${Date.now()}`,
+      user: DEMO_USERS[key],
+    });
   };
 
   return (
